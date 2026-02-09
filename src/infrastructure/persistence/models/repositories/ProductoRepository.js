@@ -2,20 +2,71 @@ const { pool } = require('../../../config/database');
 
 class ProductoRepository {
 
-  async microemprendedorExiste(id) {
-    const [rows] = await pool.query(
-      'SELECT 1 FROM microemprendedores WHERE id_microemprendedor = ? AND estado = 1',
-      [id]
-    );
-    return rows.length > 0;
+  async listarTodos() {
+    const [rows] = await pool.query(`
+      SELECT 
+        p.id_producto,
+        p.nombre,
+        p.descripcion,
+        p.precio,
+        p.destacado,
+        m.nombre AS microemprendedor,
+        c.nombre AS categoria
+      FROM productos p
+      JOIN microemprendedores m ON p.id_microemprendedor = m.id_microemprendedor
+      JOIN categorias c ON p.id_categoria = c.id_categoria
+      WHERE p.estado = 1
+    `);
+    return rows;
   }
 
-  async categoriaExiste(id) {
+
+
+
+  async listarPorMicroemprendedor(id) {
+    const [rows] = await pool.query(`
+      SELECT *
+      FROM productos
+      WHERE id_microemprendedor = ? AND estado = 1
+    `, [id]);
+    return rows;
+  }
+  async obtenerDetallePorId(id) {
+    const [rows] = await pool.query(`
+    SELECT 
+      p.id_producto,
+      p.nombre,
+      p.descripcion,
+      p.precio,
+      p.destacado,
+      p.id_categoria,
+      c.nombre AS categoria,
+
+      m.id_microemprendedor,
+      m.nombre AS microemprendedor,
+      m.telefono,
+      m.email,
+      m.direccion,
+
+      pi.url_imagen
+    FROM productos p
+    JOIN categorias c ON p.id_categoria = c.id_categoria
+    JOIN microemprendedores m ON p.id_microemprendedor = m.id_microemprendedor
+    LEFT JOIN producto_imagenes pi ON p.id_producto = pi.id_producto
+    WHERE p.id_producto = ? AND p.estado = 1
+  `, [id]);
+
+    return rows;
+  }
+
+
+
+  async obtenerPorId(id) {
     const [rows] = await pool.query(
-      'SELECT 1 FROM categorias WHERE id_categoria = ? AND estado = 1',
+      `SELECT * FROM productos WHERE id_producto = ? AND estado = 1`,
       [id]
     );
-    return rows.length > 0;
+    return rows[0];
   }
 
   async crear(data) {
@@ -25,16 +76,8 @@ class ProductoRepository {
       nombre,
       descripcion,
       precio,
-      destacado
+      destacado = 0
     } = data;
-
-    if (!await this.microemprendedorExiste(id_microemprendedor)) {
-      throw new Error('Microemprendedor no existe');
-    }
-
-    if (!await this.categoriaExiste(id_categoria)) {
-      throw new Error('Categoría no existe');
-    }
 
     const [result] = await pool.query(
       `INSERT INTO productos
@@ -46,54 +89,34 @@ class ProductoRepository {
     return { id_producto: result.insertId, ...data };
   }
 
-  async listarPorMicroemprendedor(id_microemprendedor) {
-    const [rows] = await pool.query(`
-      SELECT 
-        p.id_producto,
-        p.nombre,
-        p.descripcion,
-        p.precio,
-        p.destacado,
-        c.nombre AS categoria
-      FROM productos p
-      JOIN categorias c ON p.id_categoria = c.id_categoria
-      WHERE p.id_microemprendedor = ?
-        AND p.estado = 1
-    `, [id_microemprendedor]);
-
-    return rows;
-  }
-
-  async actualizar(id_producto, id_microemprendedor, data) {
+  async actualizar(id, data) {
     const { nombre, descripcion, precio, id_categoria, destacado } = data;
 
     const [result] = await pool.query(
-      `UPDATE productos 
-       SET nombre = ?, descripcion = ?, precio = ?, id_categoria = ?, destacado = ?
-       WHERE id_producto = ? AND id_microemprendedor = ?`,
-      [nombre, descripcion, precio, id_categoria, destacado, id_producto, id_microemprendedor]
+      `UPDATE productos
+       SET nombre=?, descripcion=?, precio=?, id_categoria=?, destacado=?
+       WHERE id_producto=?`,
+      [nombre, descripcion, precio, id_categoria, destacado, id]
     );
 
     if (result.affectedRows === 0) {
-      throw new Error('Producto no existe o no pertenece al microemprendedor');
+      throw new Error('Producto no existe');
     }
 
-    return { id_producto, ...data };
+    return { id_producto: id, ...data };
   }
 
-  async darDeBaja(id_producto, id_microemprendedor) {
+  async darDeBaja(id) {
     const [result] = await pool.query(
-      `UPDATE productos 
-       SET estado = 0
-       WHERE id_producto = ? AND id_microemprendedor = ?`,
-      [id_producto, id_microemprendedor]
+      `UPDATE productos SET estado=0 WHERE id_producto=?`,
+      [id]
     );
 
     if (result.affectedRows === 0) {
-      throw new Error('Producto no existe o no pertenece al microemprendedor');
+      throw new Error('Producto no existe');
     }
 
-    return { eliminado: true };
+    return true;
   }
 }
 

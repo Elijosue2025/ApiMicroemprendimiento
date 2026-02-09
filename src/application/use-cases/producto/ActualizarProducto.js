@@ -1,10 +1,8 @@
-class ActualizarProducto {
-  constructor(repository) {
-    this.repository = repository;
-  }
-
-  async ejecutar(id_producto, id_microemprendedor, data) {
-    return await this.repository.actualizar(id_producto, id_microemprendedor, data);
-  }
-}
-module.exports = ActualizarProducto;
+module.exports = async function ActualizarProducto(
+  id_producto,
+  id_microemprendedor,
+  data,
+  repo
+) {
+  return await repo.actualizar(id_producto, id_microemprendedor, data);
+};

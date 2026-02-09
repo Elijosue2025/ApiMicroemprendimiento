@@ -2,6 +2,7 @@ const express = require('express');
 const controller = require('../controllers/microemprendedorController');
 
 const router = express.Router();
+router.post('/login', controller.login);
 
 router.get('/', controller.listar);
 router.get('/:id', controller.obtener);

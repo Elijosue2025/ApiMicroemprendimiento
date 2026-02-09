@@ -2,5 +2,6 @@ module.exports = {
   CrearProducto: require('./CrearProducto'),
   ListarProductosPorMicroemprendedor: require('./ListarProductosPorMicroemprendedor'),
   ActualizarProducto: require('./ActualizarProducto'),
-  EliminarProducto: require('./EliminarProducto')
+  EliminarProducto: require('./EliminarProducto'),
+  ObtenerDetalleProducto: require('./ObtenerDetalleProducto')
 };

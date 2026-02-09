@@ -1,10 +1,3 @@
-class CrearProducto {
-  constructor(repository) {
-    this.repository = repository;
-  }
-
-  async ejecutar(data) {
-    return await this.repository.crear(data);
-  }
-}
-module.exports = CrearProducto;
+module.exports = async function CrearProducto(data, repo) {
+  return await repo.crear(data);
+};

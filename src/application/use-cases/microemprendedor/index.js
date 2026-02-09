@@ -3,5 +3,8 @@ module.exports = {
   obtenerMicroemprendedor: require('./ObtenerMicroemprendedor'),
   crearMicroemprendedor: require('./CrearMicroemprendedor'),
   actualizarMicroemprendedor: require('./ActualizarMicroemprendedor'),
-  eliminarMicroemprendedor: require('./EliminarMicroemprendedor')
+  eliminarMicroemprendedor: require('./EliminarMicroemprendedor'),
+
+  // 🔐 LOGIN
+  loginMicroemprendedor: require('./loginMicroemprendedor')
 };

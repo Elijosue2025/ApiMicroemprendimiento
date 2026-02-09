@@ -1,10 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/productoController');
 
-router.post('/', controller.crear);
-router.get('/microemprendedor/:id', controller.listarPorMicroemprendedor);
-router.put('/:id', controller.actualizar);
-router.delete('/:id', controller.eliminar);
+const productoController = require('../controllers/productoController');
+
+// 🔍 DETALLE COMPLETO (VA PRIMERO)
+router.get('/:id/detalle', productoController.obtenerDetalle);
+
+// 📄 TODOS
+router.get('/', productoController.listarTodos);
+
+// 📄 POR MICRO
+router.get('/micro/:id', productoController.listarPorMicro);
+
+// 🔍 SIMPLE
+router.get('/:id', productoController.obtener);
+
+// CRUD
+router.post('/', productoController.crear);
+router.put('/:id', productoController.actualizar);
+router.delete('/:id', productoController.eliminar);
 
 module.exports = router;
