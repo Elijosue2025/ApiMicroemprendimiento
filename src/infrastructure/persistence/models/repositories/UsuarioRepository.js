@@ -1,22 +1,45 @@
-const { pool } = require('../../config/database');
+const db = require('../../../config/db');
 
 class UsuarioRepository {
-
-  async crear(usuario) {
-    const [result] = await pool.query(
-      `INSERT INTO usuarios (nombre, email, password)
-       VALUES (?, ?, ?)`,
-      [usuario.nombre, usuario.email, usuario.password]
+  async create({ nombre, email, password }) {
+    const [result] = await db.query(
+      `INSERT INTO usuarios (nombre, email, password, estado)
+       VALUES (?, ?, ?, 1)`,
+      [nombre, email, password]
     );
-    return { id_usuario: result.insertId, ...usuario };
+    return result.insertId;
   }
 
-  async obtenerPorEmail(email) {
-    const [rows] = await pool.query(
-      'SELECT * FROM usuarios WHERE email = ?',
+  async findByEmail(email) {
+    const [[user]] = await db.query(
+      `SELECT * FROM usuarios WHERE email = ? AND estado = 1`,
       [email]
     );
-    return rows[0];
+    return user;
+  }
+
+  async findById(id) {
+    const [[user]] = await db.query(
+      `SELECT id_usuario, nombre, email, estado
+       FROM usuarios WHERE id_usuario = ?`,
+      [id]
+    );
+    return user;
+  }
+
+  async update(id, data) {
+    await db.query(
+      `UPDATE usuarios SET nombre = ?, email = ?
+       WHERE id_usuario = ?`,
+      [data.nombre, data.email, id]
+    );
+  }
+
+  async disable(id) {
+    await db.query(
+      `UPDATE usuarios SET estado = 0 WHERE id_usuario = ?`,
+      [id]
+    );
   }
 }
 
