@@ -1,6 +1,8 @@
 module.exports = {
   CrearPedido: require('./CrearPedido'),
   ListarPedidosUsuario: require('./ListarPedidosUsuario'),
+  ListarPedidosMicro: require('./ListarPedidosMicro'),
   ObtenerPedidoDetalle: require('./ObtenerPedidoDetalle'),
-  CambiarEstadoPedido: require('./CambiarEstadoPedido')
+  AprobarPedido: require('./AprobarPedido'),
+  CancelarPedido: require('./CancelarPedido')
 };

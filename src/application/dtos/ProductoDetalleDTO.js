@@ -1,3 +1,4 @@
+// src/application/dtos/ProductoDetalleDTO.js
 class ProductoDetalleDTO {
   constructor(rows) {
     const row = rows[0];
@@ -7,6 +8,7 @@ class ProductoDetalleDTO {
     this.descripcion = row.descripcion;
     this.precio = Number(row.precio);
     this.destacado = row.destacado === 1;
+    this.stock = row.stock || 0;                  // ← AGREGADO AQUÍ
 
     this.categoria = {
       id: row.id_categoria,

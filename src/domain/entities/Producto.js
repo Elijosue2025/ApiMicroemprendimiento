@@ -8,6 +8,7 @@ class Producto {
     precio,
     estado,
     destacado,
+    stock,
     fecha_publicacion
   }) {
     this.id_producto = id_producto;
@@ -18,8 +19,9 @@ class Producto {
     this.precio = precio;
     this.estado = estado;
     this.destacado = destacado;
+    this.stock=stock;
     this.fecha_publicacion = fecha_publicacion;
   }
 }
-
+666
 module.exports = Producto;

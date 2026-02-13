@@ -1,10 +1,12 @@
+// Muy simple – solo estructura + posible validación futura
 class Usuario {
-  constructor({ id_usuario, nombre, email, password, estado }) {
-    this.id_usuario = id_usuario;
-    this.nombre = nombre;
-    this.email = email;
-    this.password = password;
-    this.estado = estado;
+  constructor(data) {
+    this.id_usuario     = data.id_usuario;
+    this.nombre         = data.nombre;
+    this.email          = data.email;
+    this.password       = data.password;        // solo se usa internamente
+    this.estado         = data.estado ?? 1;
+    this.fecha_registro = data.fecha_registro;
   }
 }
 

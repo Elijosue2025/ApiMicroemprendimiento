@@ -1,19 +1,21 @@
-class LoginUsuario {
-  constructor(usuarioRepository, hashService, jwtService) {
-    this.usuarioRepository = usuarioRepository;
-    this.hashService = hashService;
-    this.jwtService = jwtService;
+const jwt = require('jsonwebtoken');
+
+module.exports = async function LoginUsuario(email, password, repo) {
+  const user = await repo.login(email, password);
+
+  if (!user) {
+    return null;
   }
 
-  async execute(email, password) {
-    const user = await this.usuarioRepository.findByEmail(email);
-    if (!user) throw new Error('Usuario no encontrado');
+  const token = jwt.sign(
+    {
+      id: user.id_usuario,
+      email: user.email,
+      role: 'usuario'
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES || '8h' }
+  );
 
-    const valid = await this.hashService.compare(password, user.password);
-    if (!valid) throw new Error('Credenciales inválidas');
-
-    return this.jwtService.sign({ id_usuario: user.id_usuario });
-  }
-}
-
-module.exports = LoginUsuario;
+  return { user, token };
+};

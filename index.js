@@ -9,7 +9,8 @@ require('./src/infrastructure/config/database');
 const microRoutes = require('./src/http/routes/microemprendedoresRoutes');
 const categoriasRoutes = require('./src/http/routes/categoriasRoutes');
 const productosRoutes = require('./src/http/routes/productosRoutes');
-
+const usuarioRoutes = require('./src/http/routes/usuariosRoutes');
+const pedidosRoutes = require('./src/http/routes/pedidosRoutes');
 const app = express();
 
 // 🔥 Middlewares (ANTES de las rutas)
@@ -26,6 +27,9 @@ app.get('/health', (_, res) => {
 app.use('/api/microemprendedores', microRoutes);
 app.use('/api/categorias', categoriasRoutes);
 app.use('/api/productos', productosRoutes);
+app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/pedidos', pedidosRoutes); // ← nueva línea
+app.use('/img', express.static('img'));
 
 
 // Server

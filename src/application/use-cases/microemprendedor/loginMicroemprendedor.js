@@ -7,13 +7,13 @@ module.exports = async (email, password) => {
   if (!micro) return null;
 
   const token = jwt.sign(
-    {
-      id: micro.id_microemprendedor,
-      email: micro.email
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES || '8h' }
-  );
+  {
+    id: micro.id_microemprendedor,
+    email: micro.email
+  },
+  process.env.JWT_SECRET,
+  { expiresIn: '8h' }
+);
 
   return {
     ...micro,
